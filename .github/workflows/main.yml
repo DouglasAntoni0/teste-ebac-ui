@@ -6,10 +6,14 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   rodar-testes:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -20,7 +24,42 @@ jobs:
           node-version: '18'
           
       - name: Instalar dependências
-        run: npm ci
+        run: npm install 
 
       - name: Executar os testes (modo headless)
         run: npx cypress run
+        continue-on-error: true 
+
+      - name: Upload dos artefatos (Relatório HTML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-mochawesome 
+          path: cypress/reports/html  
+          retention-days: 5 
+
+  deploy-pages:
+    needs: rodar-testes
+    
+    permissions:
+      pages: write
+      id-token: write
+      
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Baixar o artefato (relatório) salvo
+        uses: actions/download-artifact@v4
+        with:
+          name: relatorio-mochawesome 
+          
+      - name: Upload para o Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: . 
+
+      - name: Deploy no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

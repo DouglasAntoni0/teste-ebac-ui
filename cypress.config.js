@@ -1,10 +1,22 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
-  projectId: 'dhb3y3',
+  
+  reporter: 'cypress-mochawesome-reporter',
+  reporterOptions: {
+    charts: true,
+    reportPageTitle: 'Relatório de Testes - EBAC UI',
+    embeddedScreenshots: true,
+    inlineAssets: true,
+    saveAllAttempts: false,
+  },
+
+  projectId: 'dhb3y3', 
+  
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+ 
+      require('cypress-mochawesome-reporter/plugin')(on);
     },
 
     baseUrl: 'http://lojaebac.ebaconline.art.br/',
