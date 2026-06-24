@@ -101,13 +101,25 @@ O foco do projeto é aproximar automação de UI de uma rotina profissional:
 4. Usar dados dinâmicos quando necessário.
 5. Registrar resultados de forma auditável.
 
+## Valor das evidências para QA
+
+Um teste que falha sem evidência gera trabalho extra para todo o time. Por isso, este projeto ganha força ao combinar automação com relatório, screenshots e vídeo. Esses artefatos reduzem a distância entre a falha e o diagnóstico, porque mostram o que aconteceu, em qual etapa e com qual comportamento visual.
+
+Essa preocupação é importante para ambientes profissionais: QA não entrega apenas scripts, entrega clareza para tomada de decisão. Quando a execução deixa rastros bem organizados, fica mais fácil conversar com desenvolvimento, produto e liderança sobre risco, prioridade e causa provável.
+
+## Critérios de evolução da suíte
+
+Para este repositório crescer com consistência, a evolução deve priorizar fluxos críticos de negócio, dados controlados e boa separação entre setup e validação. Também faz sentido publicar relatórios como artifacts no GitHub Actions, mantendo histórico de execução acessível para análise.
+
+Outro caminho forte é combinar testes de UI com chamadas de API para preparar massa, reduzindo dependência de cadastros manuais e deixando a suíte mais rápida e confiável.
+
 ## Troubleshooting
 
 | Problema | Possível causa | Ação sugerida |
 | --- | --- | --- |
 | Relatório não aparece | Reporter não executou ou pasta mudou | Conferir configuração do Mochawesome |
 | Cypress Cloud não grava | Chave de gravação não configurada | Configurar secret/token corretamente |
-| Teste falha no Chrome | Browser indisponível ou ambiente inconsistente | Verificar instalação do Chrome |
+| Teste falha no Chrome | Browser ausente ou ambiente inconsistente | Verificar instalação do Chrome |
 | Elemento não encontrado | DOM ou seletor mudou | Inspecionar aplicação alvo |
 
 ## Resultado técnico
