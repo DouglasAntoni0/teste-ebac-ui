@@ -10,9 +10,16 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: ebac-ui-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   rodar-testes:
     runs-on: ubuntu-latest
+    outputs:
+      report-name: relatorio-mochawesome-${{ github.run_attempt }}
+      report-id: ${{ steps.report.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,23 +30,27 @@ jobs:
       - name: Executar testes
         run: npx cypress run
       - name: Guardar relatório
+        id: report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: relatorio-mochawesome
+          name: relatorio-mochawesome-${{ github.run_attempt }}
           path: cypress/reports/html
           retention-days: 5
           if-no-files-found: warn
   deploy-pages:
-    if: ${{ always() && needs.rodar-testes.result != 'cancelled' }}
+    if: ${{ always() && needs.rodar-testes.result != 'cancelled' && needs.rodar-testes.outputs.report-id != '' }}
     needs: rodar-testes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/configure-pages@v4
       - uses: actions/download-artifact@v4
         with:
-          name: relatorio-mochawesome
+          name: ${{ needs.rodar-testes.outputs.report-name }}
       - uses: actions/upload-pages-artifact@v3
         with:
+          name: github-pages-${{ github.run_attempt }}
           path: .
       - uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}

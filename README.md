@@ -68,7 +68,9 @@ O script usa `cypress run --record`; não contém chave embutida. Credenciais de
 - Vídeos: `cypress/videos/`.
 - [Relatório publicado no GitHub Pages](https://douglasantoni0.github.io/teste-ebac-ui/).
 
-O workflow `main.yml` executa em push para `main` e manualmente. Ele instala dependências, roda Cypress, envia o artefato `relatorio-mochawesome` com retenção de cinco dias e publica o HTML no Pages. A falha dos testes reprova o job; o upload é tentado mesmo em falha, e o relatório pode mostrar cenários reprovados. Consulte a execução correspondente antes de interpretar o resultado publicado.
+O workflow `main.yml` executa em push para `main` e manualmente. Ele instala dependências, roda Cypress, envia o artefato `relatorio-mochawesome-<tentativa>` com retenção de cinco dias e publica o HTML no Pages quando o artefato foi gerado. As execuções da mesma branch são enfileiradas.
+
+A falha dos testes reprova o job; o upload é tentado mesmo em falha, e o relatório pode mostrar cenários reprovados. O deploy usa o artefato identificado pelo job de testes e um nome de Pages específico da tentativa, evitando duplicidade ao repetir uma execução. Consulte a execução correspondente antes de interpretar o resultado publicado.
 
 ## Evolução
 
