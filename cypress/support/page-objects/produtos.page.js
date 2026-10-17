@@ -1,44 +1,46 @@
-class ProdutosPage { 
+class ProdutosPage {
+  visitarUrl() {
+    cy.visit('/produtos/')
+  }
 
-    visitarUrl() {
-        cy.visit('produtos')
+  buscarProduto(nomeProduto) {
+    cy.get('[name="s"]').eq(1).type(nomeProduto)
+    cy.get('.button-search').eq(1).click()
+  }
 
-    }
+  buscarProdutoLista(nomeProduto) {
+    cy.get('.products .product-block').then($produtos => {
+      const $produto = $produtos.filter((_, el) => Cypress.$(el).text().includes(nomeProduto))
+      if ($produto.length) {
+        cy.wrap($produto.first()).contains('a', nomeProduto).click()
+      } else {
+        cy.get('a.next.page-numbers').should('be.visible').click()
+        this.buscarProdutoLista(nomeProduto)
+      }
+    })
+  }
 
-    buscarProduto(nomeProduto)  {
-        cy.get('[name="s"]').eq(1).type(nomeProduto)
-        cy.get('.button-search').eq(1).click()
+  visitarProduto(nomeProduto) {
+    const slug = nomeProduto.trim().toLowerCase().replace(/\s+/g, '-')
+    cy.visit(`/produtos/${slug}/`)
+  }
 
-     
-    }
-    buscarProdutoLista(nomeProduto){
-         cy.get('.products > . row')
-        .contains(nomeProduto)
-        .click()
+  selecionarVariacao(tamanho, cor) {
+    cy.get('.button-variable-item-' + tamanho).click()
+    cy.get('select[name="attribute_size"]').should('have.value', tamanho)
+    cy.get('.button-variable-item-' + cor).click()
+    cy.get('select[name="attribute_color"]').should('have.value', cor)
+    cy.get('.single_add_to_cart_button').should('not.have.class', 'disabled')
+    cy.get('input[name="variation_id"]').should($input => {
+      expect(Number($input.val())).to.be.greaterThan(0)
+    })
+  }
 
-
-    }
-    visitarProduto(nomeProduto){
-        //cy.visit(`produtos/${nomeProduto}`)
-
-        const urlFormatada = nomeProduto.replace(/ /g, '-');
-        cy.visit(`produtos/${urlFormatada}`)
-
-
-
-    }
-     addProdutoCarrinho(tamanho, cor, quantidade) {
-        cy.get('.button-variable-item-' + tamanho).click()
-        cy.get(`.button-variable-item-${cor}`).click()
-        cy.get('.input-text').clear().type(quantidade)
-        cy.get('.single_add_to_cart_button').click()
-        
-
-     }
-
-
-
-
+  addProdutoCarrinho(tamanho, cor, quantidade) {
+    this.selecionarVariacao(tamanho, cor)
+    cy.get('input.qty').clear().type(String(quantidade))
+    cy.get('.single_add_to_cart_button').click()
+  }
 }
 
 export default new ProdutosPage()

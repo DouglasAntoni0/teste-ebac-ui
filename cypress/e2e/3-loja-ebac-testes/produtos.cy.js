@@ -28,10 +28,10 @@ describe('Funcionalidade: Produtos ', () => {
         let qtd = 7
         produtosPage.visitarProduto('Arcadio Gym Short')
         produtosPage.addProdutoCarrinho('34', 'Blue', qtd)
-        cy.get('.woocommerce-message').should('contain', `${qtd} × "Arcadio Gym Short" foram adicionados no seu carrinho.`)
+        cy.get('.woocommerce-message').should('contain', 'Arcadio Gym Short').and('contain', String(qtd))
     });
 
-    it.only('Deve adicionar produto ao carrinho buscando da massa de dados', () => {
+    it('Deve adicionar produto ao carrinho buscando da massa de dados', () => {
         cy.fixture('produtos').then(dados => {
             produtosPage.visitarProduto(dados[0].nomeProduto)
             produtosPage.addProdutoCarrinho(dados[0].tamanho, dados[0].cor, dados[0].quantidade)

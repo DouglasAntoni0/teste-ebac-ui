@@ -1,51 +1,30 @@
-/// <reference types="cypress"/>
-import { faker } from '@faker-js/faker';
+/// <reference types="cypress" />
+import { faker } from '@faker-js/faker'
+
+const emailUnico = () => `qa.cadastro.${Date.now()}.${Cypress._.random(1000000)}@example.com`
 
 describe('Funcionalidade: Cadastro', () => {
+  beforeEach(() => cy.visit('/minha-conta/'))
 
-    before(() => {
+  it('Deve completar o cadastro com sucesso', () => {
+    cy.registrarConta(emailUnico(), 'CiRegression@2026!')
+    cy.get('.woocommerce-MyAccount-navigation-link--edit-account a').click()
+    cy.detalhesConta(faker.person.firstName(), faker.person.lastName(), 'Cliente QA')
+    cy.get('.woocommerce-message').should('contain', 'Detalhes da conta modificados com sucesso.')
+  })
 
-        cy.visit('minha-conta')
-        
-    });
+  it('Deve completar o cadastro com sucesso - usando variaveis', () => {
+    const nome = faker.person.firstName()
+    const sobrenome = faker.person.lastName()
+    const email = emailUnico()
+    cy.registrarConta(email, 'CiRegression@2026!')
+    cy.get('.woocommerce-MyAccount-navigation-link--edit-account a').click()
+    cy.detalhesConta(nome, sobrenome, email.split('@')[0])
+    cy.get('.woocommerce-message').should('contain', 'Detalhes da conta modificados com sucesso.')
+  })
 
-    it('Deve completar o cadastro com sucesso', () => {
-        cy.get('#reg_email').type(faker.internet.email())
-        cy.get('#reg_password').type('Sertanejo@2')
-        cy.get(':nth-child(4) > .button').click()
-        cy.get('.woocommerce-MyAccount-content > :nth-child(2)').should('exist')
-        cy.get('.woocommerce-MyAccount-navigation-link--edit-account > a').click()
-        cy.get('#account_first_name').type(faker.person.firstName())
-        cy.get('#account_last_name').type(faker.person.lastName())
-        cy.get('.woocommerce-Button').click()
-        cy.get('.woocommerce-message').should('contain' , 'Detalhes da conta modificados com sucesso.')
-
-    });
-
-     it('Deve completar o cadastro com sucesso - usando variaveis', () => {
-
-        
-        var nome = faker.person.firstName()
-        var email = faker.internet.email(nome)
-
-        var sobrenome = faker.person.lastName()
-
-        cy.get('#reg_email').type(email)
-        cy.get('#reg_password').type('Sertanejo@2')
-        cy.get(':nth-child(4) > .button').click()
-        cy.get('.woocommerce-MyAccount-content > :nth-child(2)').should('exist')
-        cy.get('.woocommerce-MyAccount-navigation-link--edit-account > a').click()
-        cy.get('#account_first_name').type(nome)
-        cy.get('#account_last_name').type(sobrenome)
-        cy.get('.woocommerce-Button').click()
-        cy.get('.woocommerce-message').should('contain' , 'Detalhes da conta modificados com sucesso.')
-
-    });
-
-    it('Deve completar o cadastro com sucesso usando comando customizado', () => {
-       cy.preCadastro(faker.internet.email(), 'Sertanejo@2', faker.person.firstName(), faker.person.lastName());
-    
-        
-    });
-    
-});
+  it('Deve completar o cadastro com sucesso usando comando customizado', () => {
+    cy.preCadastro(emailUnico(), 'CiRegression@2026!', faker.person.firstName(), faker.person.lastName())
+    cy.get('.woocommerce-message').should('contain', 'Detalhes da conta modificados com sucesso.')
+  })
+})

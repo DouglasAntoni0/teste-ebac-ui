@@ -69,7 +69,7 @@ context('Cypress APIs', () => {
       cy.visit('https://example.cypress.io/cypress-api')
     })
 
-    it('Get and set configuration options', () => {
+    it('Get and set configuration options', { baseUrl: null }, () => {
     // https://on.cypress.io/config
       let myConfig = Cypress.config()
 

@@ -10,12 +10,9 @@ context('Misc', () => {
 
     // cy.end is useful when you want to end a chain of commands
     // and force Cypress to re-query from the root element
-    cy.get('.misc-table').within(() => {
-      // ends the current chain and yields null
-      cy.contains('Cheryl').click().end()
-
-      // queries the entire table again
-      cy.contains('Charles').click()
+    cy.get('.misc-form').within(() => {
+      cy.get('#name').click().end().should('be.null')
+      cy.get('#description').click().should('have.focus')
     })
   })
 
@@ -55,7 +52,7 @@ context('Misc', () => {
       .its('stdout').should('contain', 'Jane Lane')
 
     if (Cypress.platform === 'win32') {
-      cy.exec(`print ${Cypress.config('configFile')}`)
+      cy.exec(`type "${Cypress.config('configFile')}"`)
         .its('stderr').should('be.empty')
     } else {
       cy.exec(`cat ${Cypress.config('configFile')}`)
