@@ -10,10 +10,8 @@ context('Misc', () => {
 
     // cy.end is useful when you want to end a chain of commands
     // and force Cypress to re-query from the root element
-    cy.get('.misc-form').within(() => {
-      cy.get('#name').click().end().should('be.null')
-      cy.get('#description').click().should('have.focus')
-    })
+    cy.get('#name').click().end().should('be.null')
+    cy.get('#description').click().should('have.focus')
   })
 
   it('cy.exec() - execute a system command', () => {
@@ -65,10 +63,10 @@ context('Misc', () => {
 
   it('cy.focused() - get the DOM element that has focus', () => {
     // https://on.cypress.io/focused
-    cy.get('.misc-form').find('#name').click()
+    cy.get('#name').click()
     cy.focused().should('have.id', 'name')
 
-    cy.get('.misc-form').find('#description').click()
+    cy.get('#description').click()
     cy.focused().should('have.id', 'description')
   })
 

@@ -1,15 +1,15 @@
 Cypress.Commands.add('login', (usuario, senha) => {
-  cy.get('form.login #username').clear().type(usuario)
-  cy.get('form.login #password').clear().type(senha, { log: false })
-  cy.get('form.login [name="login"]').click()
+  cy.get('#username').clear().type(usuario)
+  cy.get('#password').clear().type(senha, { log: false })
+  cy.get('[name="login"][type="submit"]').click()
 })
 
 Cypress.Commands.add('registrarConta', (email, senha) => {
-  cy.get('form.register #reg_email').type(email)
-  cy.get('form.register #reg_password').type(senha, { log: false })
-  cy.get('form.register [name="register"]').click()
-  cy.get('.woocommerce-MyAccount-navigation').contains('a', 'Sair').should('be.visible')
-  cy.get('.woocommerce-MyAccount-content').should('contain', email.split('@')[0])
+  cy.get('#reg_email').type(email)
+  cy.get('#reg_password').type(senha, { log: false })
+  cy.get('[name="register"][type="submit"]').click()
+  cy.contains('nav a', /^Sair$/).should('be.visible')
+  cy.contains('Olá, ' + email.split('@')[0]).should('be.visible')
 })
 
 Cypress.Commands.add('criarContaTeste', (prefixo = 'conta') => {
@@ -24,7 +24,7 @@ Cypress.Commands.add('criarContaTeste', (prefixo = 'conta') => {
 
 Cypress.Commands.add('preCadastro', (email, senha, nome, sobrenome) => {
   cy.registrarConta(email, senha)
-  cy.get('.woocommerce-MyAccount-navigation-link--edit-account a').click()
+  cy.contains('nav a', /^Detalhes da conta$/).click()
   cy.detalhesConta(nome, sobrenome, email.split('@')[0])
 })
 
@@ -32,5 +32,5 @@ Cypress.Commands.add('detalhesConta', (nome, sobrenome, usuario) => {
   cy.get('#account_first_name').clear().type(nome)
   cy.get('#account_last_name').clear().type(sobrenome)
   cy.get('#account_display_name').clear().type(usuario)
-  cy.get('form.edit-account [name="save_account_details"]').click()
+  cy.get('[name="save_account_details"][type="submit"]').click()
 })

@@ -2,8 +2,8 @@
 const massa = require('../../fixtures/perfil.json')
 let perfil
 const verificarLogin = () => {
-  cy.get('.woocommerce-MyAccount-navigation').contains('a', 'Sair').should('be.visible')
-  cy.get('.woocommerce-MyAccount-content').should('contain', perfil.usuario.split('@')[0])
+  cy.contains('nav a', /^Sair$/).should('be.visible')
+  cy.contains('Olá, ' + perfil.usuario.split('@')[0]).should('be.visible')
 }
 
 describe('Funcionalidade: Login', () => {
@@ -21,19 +21,19 @@ describe('Funcionalidade: Login', () => {
   it('Deve fazer login com sucesso', () => {
     cy.get('#username').type(perfil.usuario)
     cy.get('#password').type(perfil.senha, { log: false })
-    cy.get('form.login [name="login"]').click()
+    cy.get('[name="login"][type="submit"]').click()
     verificarLogin()
   })
 
   it('Deve mostrar uma mensagem de erro ao inserir usuario invalido', () => {
     cy.login(`inexistente.${Date.now()}@example.com`, perfil.senha)
-    cy.get('.woocommerce-error').should('be.visible').and('not.be.empty')
+    cy.get('[role="alert"]').should('be.visible').and('not.be.empty')
     cy.get('#username').should('be.visible')
   })
 
   it('Deve apresentar uma mensagem de erro ao inserir senha invalida', () => {
     cy.login(perfil.usuario, 'SenhaIncorreta@2026!')
-    cy.get('.woocommerce-error').should('be.visible').and('not.be.empty')
+    cy.get('[role="alert"]').should('be.visible').and('not.be.empty')
     cy.get('#username').should('be.visible')
   })
 

@@ -16,7 +16,7 @@ Testes de cadastro, login, detalhes da conta e produtos da EBAC Shop, com Cypres
 
 A aplicação alvo é `http://lojaebac.ebaconline.art.br/`. A suíte depende da disponibilidade desse ambiente. Cadastro, login e detalhes de conta usam contas fictícias novas por execução; o fixture `perfil.json` contém somente dados de teste. Os cenários de login limpam a sessão antes de cada teste, e os de cadastro abrem o formulário no `beforeEach`.
 
-Os cenários de produtos percorrem a paginação quando necessário e aguardam a seleção efetiva de tamanho/cor antes de adicionar ao carrinho. Todos os cenários são executados; não há `it.only` nos specs da loja. Os exemplos de configuração e de `.end()` foram adaptados à configuração deste projeto e ao formulário atualmente disponível no Kitchen Sink do Cypress.
+Os cenários da loja usam IDs, nomes de campos, alertas ARIA, grupos de opções e links identificados por texto ou destino. Não usam posição no DOM, `eq`, `first` ou classes visuais para localizar controles. A busca identifica o campo visível e único; produtos e paginação são encontrados por seu conteúdo e URL. Os cenários aguardam a seleção efetiva de tamanho/cor antes de adicionar ao carrinho. Todos são executados; não há `it.only` nos specs da loja. Os exemplos de configuração e de `.end()` foram adaptados à configuração deste projeto e aos elementos atualmente disponíveis no Kitchen Sink do Cypress.
 
 ## Executar localmente
 

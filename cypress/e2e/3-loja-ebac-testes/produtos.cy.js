@@ -9,14 +9,14 @@ describe('Funcionalidade: Produtos ', () => {
 
     it('deve selecionar um produto da lista', () => {
         produtosPage.buscarProdutoLista('Augusta Pullover Jacket')
-        cy.get('#tab-title-description > a').should('contain', "Descrição")
+        cy.get('a[href="#tab-description"]').should('contain', "Descrição")
 
     });
 
     it('Deve buscar um produto com sucesso', () => {
         let produto = 'Zeppelin Yoga Pant'
         produtosPage.buscarProduto(produto)
-        cy.get('.product_title').should('contain', produto)
+        cy.get('h1').should('contain', produto)
 
     });
 
@@ -28,14 +28,14 @@ describe('Funcionalidade: Produtos ', () => {
         let qtd = 7
         produtosPage.visitarProduto('Arcadio Gym Short')
         produtosPage.addProdutoCarrinho('34', 'Blue', qtd)
-        cy.get('.woocommerce-message').should('contain', 'Arcadio Gym Short').and('contain', String(qtd))
+        cy.get('[role="alert"]').should('contain', 'Arcadio Gym Short').and('contain', String(qtd))
     });
 
     it('Deve adicionar produto ao carrinho buscando da massa de dados', () => {
         cy.fixture('produtos').then(dados => {
             produtosPage.visitarProduto(dados[0].nomeProduto)
             produtosPage.addProdutoCarrinho(dados[0].tamanho, dados[0].cor, dados[0].quantidade)
-            cy.get('.woocommerce-message').should('contain', dados[0].nomeProduto)
+            cy.get('[role="alert"]').should('contain', dados[0].nomeProduto)
         })
     });
 });
